@@ -5,22 +5,6 @@ using System.Linq;
 
 namespace Hough
 {
-    public partial class MyClass
-    {
-        public MyClass()
-        {
-            this.TestFunction(5);
-        }
-        partial void TestFunction(int a);
-    }
-
-    public partial class MyClass
-    {
-        partial void TestFunction(int a)
-        {
-            Console.WriteLine(a);
-        }
-    }
     class Program
     {
 
@@ -47,7 +31,7 @@ namespace Hough
                 for (int y = 0; y < height; y++)
                 {
                     var pixel = inputBitmap.GetPixel(x, y);
-                    if (!(pixel.R == 255 && pixel.G==255 && pixel.B==255)) //ignore pixels containing red part
+                    if (pixel.ToArgb() != Color.White.ToArgb()) //ignore while pixels
                     {
                         for (int k = 0; k < 180; k++)
                         {
@@ -73,8 +57,12 @@ namespace Hough
 
             //Extract lines
             var lines = PreLines.Where(z => z.Value >= cross_num).Select(z => (z.Key.Item1, z.Key.Item2)).ToList();
-
-            //把这些点构成的直线提取出来,输出图像数组为I_out
+            //Console.WriteLine("Found Lines:");
+            //foreach(var line in lines)
+            //{
+            //    Console.WriteLine($"Rho={line.Item1},Theta={line.Item2}");
+            //}
+            //把这些点构成的直线提取出来,输出图像数组为outputBitmap
             var outputBitmap = new Bitmap(width, height);
             for (int x = 0; x < width; x++)
             {
@@ -84,7 +72,7 @@ namespace Hough
                     outputBitmap.SetPixel(x, y, Color.White);
 
                     var pixel = inputBitmap.GetPixel(x, y);
-                    if (!(pixel.R == 255 && pixel.G == 255 && pixel.B == 255)) //ignore pixels containing red part
+                    if (pixel.ToArgb() != Color.White.ToArgb()) //ignore while pixels
                     {
                         for (int k = 0; k < 180; k++)
                         {
